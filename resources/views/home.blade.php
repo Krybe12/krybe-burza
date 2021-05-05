@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title') Welcome @endsection
+@section('title') Home @endsection
 
 @section('content')
 <section class="section has-text-centered">

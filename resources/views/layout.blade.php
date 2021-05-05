@@ -6,10 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
   <script src="js/navbar.js"></script>
-  <title>@yield('title')</title>
+  <title>Burza | @yield('title')</title>
 </head>
 <body class="has-background-grey" style="min-height: 100vh;">
-  <nav class="navbar" role="navigation" aria-label="main navigation">
+  <nav class="navbar is-light" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="">
         <img src="img/burza-icon.png" width="112" height="28">
@@ -20,13 +20,13 @@
         <span aria-hidden="true"></span>
     </a>
     </div>
-
+    
     <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
 
-      <a class="navbar-item" href="/">Home</a>
+      <a class="navbar-item is-tab {{ request()->is('/') ? 'is-active' : ''}}" href="/">Home</a>
 
-      <a class="navbar-item" href="/trade">Trade</a>
+      <a class="navbar-item is-tab {{ request()->is('trade') ? 'is-active' : ''}}" href="/trade">Trade</a>
 
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">More</a>
@@ -35,7 +35,7 @@
           <a class="navbar-item" href="/about">About</a>
           <a class="navbar-item" href="/contact">Contact</a>
           <hr class="navbar-divider">
-          <a class="navbar-item">Report an issue</a>
+          <a class="navbar-item" href="/issue">Report an issue</a>
         </div>
       </div>
     </div>
