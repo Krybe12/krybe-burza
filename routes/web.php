@@ -20,4 +20,8 @@ Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/trade', [TradeController::class, 'index']);
 
+Route::get('/assets/tradetable', [TradeController::class, 'tradeTable']);
+Route::post('/assets/tradetable/{id}', [TradeController::class, 'selectMaterial']);
+Route::get('/assets/graph/{id}', [TradeController::class, 'getGraph']);
+
 //->middleware('throttle:5,1')

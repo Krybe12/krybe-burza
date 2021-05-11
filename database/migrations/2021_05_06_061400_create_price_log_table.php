@@ -17,8 +17,8 @@ class CreatePriceLogTable extends Migration
         Schema::create('price_log', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('material_id');
-            $table->integer('price');
-            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->float('price');
+            $table->timestamp('created_at')->useCurrent();
 
             $table->foreign('material_id')->references('id')->on('materials');
         });

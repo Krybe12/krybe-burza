@@ -8,133 +8,74 @@
     <div class="column is-three-fifths has-background-success">
       <canvas id="myChart" width="400" height="400"></canvas>
     </div>
-    <div class="column has-background-warning has-text-centered is-flex is-justify-content-center" style="max-height: 84vh;overflow-y: auto;">
-      <table class="table is-hoverable is-striped is-fullwidth">
-        <thead>
-          <tr>
-            <th>material</th>
-            <th>cena</th>
-            <th>zmena</th>
-          </tr>
-        </thead>
-        <tbody id="test">
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-          <tr>
-            <th>gold</th>
-            <th>cena</th>
-            <th>+150</th>
-          </tr>
-        </tbody>
-      </table>
+    <div id="tbl" class="column has-background-warning has-text-centered is-flex is-justify-content-center" style="max-height: 84vh;overflow-y: auto;">
+      
     </div>
   </div>
 </section>
 <script>
-  var ctx = document.getElementById('myChart').getContext('2d');
-
+const tableDiv = document.getElementById('tbl');
+var ctx = document.getElementById('myChart').getContext('2d');
 var ctx = document.getElementById('myChart');
-var myChart = new Chart(ctx, {
+var chart;
+getTable();
+async function getTable(){
+  await getData('assets/tradetable').then(data => tableDiv.innerHTML = data);
+  tableEventListener()
+}
+function tableEventListener(){
+  const tbody = document.getElementById('matBody').childNodes;
+  [...tbody].forEach(row => {
+    row.addEventListener('click', async e => {
+      const id = e.target.parentElement.dataset.id;
+      data = new FormData();
+      data.append('_token', "{{csrf_token()}}")
+      //selectRow(e.target.parentElement);
+      await fetch(`assets/tradetable/${id}`, {
+        method: 'POST',
+        body: data
+      });
+      getTable();
+      getGraph(id);
+    });
+  });
+}
+function getGraph(id){
+  getData(`assets/graph/${id}`).then(data => {
+    data = JSON.parse(data);
+    console.log(data);
+    createChart(data.shortDates, data.prices, data.fullDates);
+  });
+}
+function selectRow(element){
+  const selected = document.getElementsByClassName('is-selected');
+  [...selected].forEach(element => {
+    element.classList.remove('is-selected');
+  })
+  element.classList.add('is-selected');
+}
+async function getData(path){
+  const response = await fetch(path);
+  const data = await response.text();
+  return data;
+}
+
+function createChart(labels, prices, tooltip){
+  if (chart) chart.destroy();
+  chart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: ["po", "ut", "st", "ct", "pa", "so"],
+        labels: labels,
         datasets: [{
             label: 'price',
-            data: [12, 19, 3, 5, 2, 3],
+            data: prices,
             backgroundColor: [
-                'rgba(0, 0, 0)',
-                'rgba(54, 162, 235)',
-                'rgba(255, 206, 86)',
-                'rgba(75, 192, 192)',
-                'rgba(153, 102, 255)',
-                'rgba(255, 159, 64)'
+                'rgba(255, 255, 255)',
+                'rgba(180, 250, 45)'
             ],
             borderColor: [
                 'rgba(255, 255, 255)',
-                'rgba(0, 0, 0)',
+                'rgba(255, 255, 255)'
             ],
             borderWidth: 5
         }]
@@ -142,11 +83,23 @@ var myChart = new Chart(ctx, {
     options: {
         scales: {
             y: {
-                beginAtZero: true
+                beginAtZero: false
             }
         },
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
+
+        plugins: {
+        tooltip: {
+          callbacks: {
+            footer: (d) => {
+              let i = d[0].dataIndex;
+              return tooltip[i];
+            },
+          }
+        }
+      }
     }
-});
+  });
+}
 </script>
 @endsection

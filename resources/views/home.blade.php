@@ -7,7 +7,7 @@
 </section>
 <section class="section">
   <div class="columns has-text-centered">
-    <div class="column has-background-warning">
+    <div class="column has-background-warning-light">
       <h2 class="title">most expensive</h2>
         <table class="table is-fullwidth is-striped">
           <thead>
@@ -17,7 +17,7 @@
             </tr>
           </thead>
           <tbody>
-            @foreach ($mats as $mat)
+            @foreach ($mostExpensive as $mat)
               <tr>
                 <td> {{ $mat->name }} </td>
                 <td> {{ $mat->price }} </td>
@@ -26,8 +26,26 @@
           </tbody>
         </table>
     </div>
-    <div class="column">
-
+    <div class="column has-background-warning-light">
+      <h2 class="title">biggest Change</h2>
+        <table class="table is-fullwidth is-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Price_change</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach ($biggestChange as $mat)
+              <tr>
+                <td> {{ $mat->name }} </td>
+                <td> {{ $mat->price }} </td>
+                <td> {{ $mat->price_change }} </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
     </div>
   </div>
 </section>
