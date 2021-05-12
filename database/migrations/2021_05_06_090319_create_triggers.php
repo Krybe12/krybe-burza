@@ -13,13 +13,13 @@ class CreateTriggers extends Migration
     public function up()
     {
       DB::unprepared('
-      CREATE OR REPLACE FUNCTION generate_timetable_range()
+      CREATE OR REPLACE FUNCTION trigger_update_function()
       RETURNS trigger AS $$
       BEGIN
           INSERT INTO price_log (material_id, price) VALUES (NEW.id, NEW.price);
       END
       $$ LANGUAGE plpgsql;
-      
+
    CREATE TRIGGER t_change_prices
       AFTER UPDATE
       ON materials
