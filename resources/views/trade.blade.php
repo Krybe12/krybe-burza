@@ -5,7 +5,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <section class="section">
   <div class="columns is-variable" style="max-height: 84vh;">
-    <div class="column is-three-fifths has-background-success">
+    <div class="column is-three-fifths has-background-grey-light">
       <canvas id="myChart" width="400" height="400"></canvas>
     </div>
     <div id="tbl" class="column has-background-warning has-text-centered is-flex is-justify-content-center" style="max-height: 84vh;overflow-y: auto;">
@@ -18,33 +18,45 @@ const tableDiv = document.getElementById('tbl');
 var ctx = document.getElementById('myChart').getContext('2d');
 var ctx = document.getElementById('myChart');
 var chart;
-getTable();
+onReload();
+async function onReload(){
+  await getTable();
+  checkIfSelected();
+  setInterval(getTable, 10000);
+}
+
 async function getTable(){
   await getData('assets/tradetable').then(data => tableDiv.innerHTML = data);
-  tableEventListener()
+  addTableEventListener()
+  
 }
-function tableEventListener(){
+function addTableEventListener(){
   const tbody = document.getElementById('matBody').childNodes;
   [...tbody].forEach(row => {
     row.addEventListener('click', async e => {
       const id = e.target.parentElement.dataset.id;
       data = new FormData();
       data.append('_token', "{{csrf_token()}}")
-      //selectRow(e.target.parentElement);
+      selectRow(e.target.parentElement);
       await fetch(`assets/tradetable/${id}`, {
         method: 'POST',
         body: data
       });
-      getTable();
+      //getTable();
       getGraph(id);
     });
   });
 }
+var x
+function checkIfSelected(){
+  x = document.getElementsByClassName('is-selected');
+  if (!x) return;
+  getGraph([...x][0].dataset.id);
+}
 function getGraph(id){
   getData(`assets/graph/${id}`).then(data => {
     data = JSON.parse(data);
-    console.log(data);
-    createChart(data.shortDates, data.prices, data.fullDates);
+    createChart(data.shortDates, data.prices, data.fullDates, data.materialName, data.colors);
   });
 }
 function selectRow(element){
@@ -60,23 +72,19 @@ async function getData(path){
   return data;
 }
 
-function createChart(labels, prices, tooltip){
+function createChart(labels, prices, tooltip, materialName, colors){
   if (chart) chart.destroy();
+  colors[0] = 'rgba(0, 0, 0)';
   chart = new Chart(ctx, {
     type: 'line',
     data: {
         labels: labels,
         datasets: [{
-            label: 'price',
+            label: materialName,
             data: prices,
             backgroundColor: [
-                'rgba(255, 255, 255)',
-                'rgba(180, 250, 45)'
             ],
-            borderColor: [
-                'rgba(255, 255, 255)',
-                'rgba(255, 255, 255)'
-            ],
+            borderColor: colors,
             borderWidth: 5
         }]
     },
