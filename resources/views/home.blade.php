@@ -3,7 +3,7 @@
 
 @section('content')
 <section class="section has-text-centered">
-  <h1 class='title'>Welcome!</h1>
+  <h1 class='title'>Welcome to Burza!</h1>
 </section>
 <section class="section">
   <div class="columns has-text-centered">
