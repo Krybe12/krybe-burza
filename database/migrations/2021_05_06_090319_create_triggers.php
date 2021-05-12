@@ -41,6 +41,10 @@ class CreateTriggers extends Migration
      */
     public function down()
     {
-        DB::unprepared('DROP TRIGGER `t_price`');
+      DB::unprepared('
+      DROP TRIGGER `t_change_prices`;
+      DROP FUNCTION trigger_update_function;
+      ');
+       /*  DB::unprepared('DROP TRIGGER `t_price`'); */
     }
 }
