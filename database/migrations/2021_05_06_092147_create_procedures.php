@@ -15,9 +15,9 @@ class CreateProcedures extends Migration
       DB::unprepared('CREATE PROCEDURE p_change_prices()
       LANGUAGE SQL
        AS $$
-          DECLARE curFinished INTEGER DEFAULT 0;
-          DECLARE currentPrice INTEGER DEFAULT 0;
-          DECLARE matID INTEGER DEFAULT 0;
+          curFinished INTEGER DEFAULT 0;
+          currentPrice INTEGER DEFAULT 0;
+          matID INTEGER DEFAULT 0;
 
           DECLARE curPrice
               CURSOR FOR
