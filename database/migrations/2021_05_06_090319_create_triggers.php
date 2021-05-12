@@ -13,7 +13,7 @@ class CreateTriggers extends Migration
     public function up()
     {
       DB::unprepared('
-      CREATE FUNCTION trigger_update_function() 
+      CREATE FUNCTION OR REPLACE t_change_prices_function() 
       RETURNS TRIGGER 
       LANGUAGE PLPGSQL
    AS $$
@@ -21,7 +21,7 @@ class CreateTriggers extends Migration
       INSERT INTO price_log (material_id, price) VALUES (NEW.id, NEW.price);
    END;
    $$
-   CREATE TRIGGER trigger_name 
+   CREATE TRIGGER t_change_prices
       AFTER UPDATE
       ON materials
    FOR EACH ROW
