@@ -18,7 +18,7 @@ class CreatePriceLogTable extends Migration
             $table->id();
             $table->unsignedBigInteger('material_id');
             $table->float('price');
-            $table->timestamp('created_at')->useCurrent();
+            $table->timestamps();
 
             $table->foreign('material_id')->references('id')->on('materials');
         });

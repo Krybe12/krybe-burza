@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Material;
 use App\Models\Price_log;
 
+
 class TradeController extends Controller
 {
   public function index(){
