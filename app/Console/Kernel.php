@@ -33,7 +33,7 @@ class Kernel extends ConsoleKernel
           foreach($mats as $mat){
             $currentPrice = $mat->price;
             $maxPlus = ($currentPrice / 100) * 5;
-            $maxMinus = ($currentPrice / 100) * 4.75;
+            $maxMinus = ($currentPrice / 100) * 4.60;
             $newPrice = rand(0,1) === 1 ? $currentPrice + mt_rand(0,$maxPlus * 10) / 10 : $currentPrice - mt_rand(0,$maxMinus * 10) / 10;
             $newPriceFormated = number_format((float)$newPrice, 1, '.', '');
             $priceChangeFormated = number_format((float)$newPrice - $currentPrice, 1, '.', '');

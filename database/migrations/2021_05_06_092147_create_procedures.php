@@ -32,7 +32,7 @@ class CreateProcedures extends Migration
                         LEAVE curLoop;
                     END IF;
                     SET @maxPlus = (currentPrice / 100) * 5;
-                    SET @maxMinus = (currentPrice / 100) * 4.8;
+                    SET @maxMinus = (currentPrice / 100) * 4.60;
                     IF FLOOR(RAND() * 2) = 1 THEN
                         SET @newPrice = currentPrice + ROUND(RAND() * @maxPlus, 1);
                     ELSE
