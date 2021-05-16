@@ -22,13 +22,17 @@ onReload();
 async function onReload(){
   await getTable();
   checkIfSelected();
-  setInterval(getTable, 10000);
+  setInterval(getTable, 25000);
 }
 
 async function getTable(){
   await getData('assets/tradetable').then(data => tableDiv.innerHTML = data);
   addTableEventListener()
-  
+  try {
+    document.querySelectorAll('span')[3].parentElement.style.display = 'none';
+  } catch (error) {
+    
+  }
 }
 function addTableEventListener(){
   const tbody = document.getElementById('matBody').childNodes;

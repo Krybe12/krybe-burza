@@ -12,11 +12,11 @@ class CreateProcedures extends Migration
      */
     public function up()
     {
-        /* DB::unprepared('
+        DB::unprepared('
         CREATE OR REPLACE PROCEDURE p_change_prices()
             BEGIN
                 DECLARE curFinished INTEGER DEFAULT 0;
-                DECLARE currentPrice INTEGER DEFAULT 0;
+                DECLARE currentPrice FLOAT DEFAULT 0;
                 DECLARE matID INTEGER DEFAULT 0;
 
                 DECLARE curPrice
@@ -31,12 +31,13 @@ class CreateProcedures extends Migration
                     IF curFinished = 1 THEN
                         LEAVE curLoop;
                     END IF;
+                    select currentPrice;
                     SET @maxPlus = (currentPrice / 100) * 5;
                     SET @maxMinus = (currentPrice / 100) * 4.60;
                     IF FLOOR(RAND() * 2) = 1 THEN
-                        SET @newPrice = currentPrice + ROUND(RAND() * @maxPlus, 1);
+                        SET @newPrice = currentPrice + ROUND(RAND() * @maxPlus, 2);
                     ELSE
-                        SET @newPrice = currentPrice - ROUND(RAND() * @maxMinus, 1);
+                        SET @newPrice = currentPrice - ROUND(RAND() * @maxMinus, 2);
                     END IF;
                     SET @priceChange = @newPrice - currentPrice;
                     UPDATE materials SET price = @newPrice, price_change = @priceChange WHERE id = matID;
@@ -44,7 +45,7 @@ class CreateProcedures extends Migration
                 END LOOP curLoop;
                 CLOSE curPrice;
             END
-        '); */
+        ');
         
     }
 
@@ -55,6 +56,6 @@ class CreateProcedures extends Migration
      */
     public function down()
     {
-        /* DB::unprepared('DROP PROCEDURE `p_change_prices`'); */
+        DB::unprepared('DROP PROCEDURE `p_change_prices`');
     }
 }
