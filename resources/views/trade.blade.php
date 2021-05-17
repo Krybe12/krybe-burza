@@ -14,104 +14,114 @@
   </div>
 </section>
 <script>
-const tableDiv = document.getElementById('tbl');
-var ctx = document.getElementById('myChart').getContext('2d');
-var ctx = document.getElementById('myChart');
-var chart;
-onReload();
-async function onReload(){
-  await getTable();
-  checkIfSelected();
-  setInterval(getTable, 25000);
-}
+class Graph{
+  constructor(){
+    this.chart;
+    this.ctx = document.getElementById('myChart').getContext('2d');
+  }
 
-async function getTable(){
-  await getData('assets/tradetable').then(data => tableDiv.innerHTML = data);
-  addTableEventListener()
-  try {
-    document.querySelectorAll('span')[3].parentElement.style.display = 'none';
-  } catch (error) {
-    
+  get(id){
+    getData(`assets/graph/${id}`).then(data => {
+      this.data = JSON.parse(data);
+      this.create();
+    });
+  }
+
+  create(){
+    if (this.chart) this.chart.destroy();
+    this.data.colors[0] = 'rgba(0, 0, 0)';
+    this.chart = new Chart(this.ctx, {
+      type: 'line',
+      data: {
+          labels: this.data.shortDates,
+          datasets: [{
+              label: this.data.materialName,
+              data: this.data.prices,
+              backgroundColor: [
+              ],
+              borderColor: this.data.colors,
+              borderWidth: 5
+          }]
+      },
+      options: {
+          scales: {
+              y: {
+                  beginAtZero: false
+              }
+          },
+          maintainAspectRatio: false,
+
+          plugins: {
+          tooltip: {
+            callbacks: {
+              footer: (d) => {
+                let i = d[0].dataIndex;
+                return this.data.fullDates[i];
+              },
+            }
+          }
+        }
+      }
+    });
   }
 }
-function addTableEventListener(){
-  const tbody = document.getElementById('matBody').childNodes;
-  [...tbody].forEach(row => {
-    row.addEventListener('click', async e => {
-      const id = e.target.parentElement.dataset.id;
-      data = new FormData();
-      data.append('_token', "{{csrf_token()}}")
-      selectRow(e.target.parentElement);
-      await fetch(`assets/tradetable/${id}`, {
-        method: 'POST',
-        body: data
+
+class Table{
+  constructor(){
+    this.tableDiv = document.getElementById('tbl');
+  }
+  async get(){
+    await getData('assets/tradetable').then(data => this.tableDiv.innerHTML = data);
+    this.addEventListener()
+    try {
+      document.querySelectorAll('span')[3].parentElement.style.display = 'none'; //endora inner reklama
+    } catch (error) {}
+  }
+  addEventListener(){
+    const tbody = document.getElementById('matBody').getElementsByTagName('tr');
+    [...tbody].forEach(row => {
+      row.addEventListener('click', async e => {
+        let target = e.currentTarget;
+        let id = target.dataset.id;
+        await table.sendRowClick(id, target);
+        graph.get(id);
       });
-      //getTable();
-      getGraph(id);
     });
-  });
+  }
+  async sendRowClick(id, target){
+    let data = new FormData();
+    data.append('_token', "{{csrf_token()}}")
+    this.selectRow(target);
+    await fetch(`assets/tradetable/${id}`, {
+      method: 'POST',
+      body: data
+    });
+  }
+  selectRow(element){
+    const selected = document.getElementsByClassName('is-selected');
+    [...selected].forEach(element => {
+      element.classList.remove('is-selected');
+    })
+    element.classList.add('is-selected');
+  }
 }
-var x
+let graph = new Graph();
+let table = new Table();
+onReload();
+async function onReload(){
+  await table.get();
+  checkIfSelected();
+  setInterval(table.get.bind(table), 30000);
+}
 function checkIfSelected(){
-  x = document.getElementsByClassName('is-selected');
-  if (!x) return;
-  getGraph([...x][0].dataset.id);
-}
-function getGraph(id){
-  getData(`assets/graph/${id}`).then(data => {
-    data = JSON.parse(data);
-    createChart(data.shortDates, data.prices, data.fullDates, data.materialName, data.colors);
-  });
-}
-function selectRow(element){
-  const selected = document.getElementsByClassName('is-selected');
-  [...selected].forEach(element => {
-    element.classList.remove('is-selected');
-  })
-  element.classList.add('is-selected');
+  let selectedRow = document.getElementsByClassName('is-selected');
+  if (!selectedRow) return;
+  graph.get([...selectedRow][0].dataset.id);
 }
 async function getData(path){
   const response = await fetch(path);
   const data = await response.text();
   return data;
-}
-
-function createChart(labels, prices, tooltip, materialName, colors){
-  if (chart) chart.destroy();
-  colors[0] = 'rgba(0, 0, 0)';
-  chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: labels,
-        datasets: [{
-            label: materialName,
-            data: prices,
-            backgroundColor: [
-            ],
-            borderColor: colors,
-            borderWidth: 5
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: false
-            }
-        },
-        maintainAspectRatio: false,
-
-        plugins: {
-        tooltip: {
-          callbacks: {
-            footer: (d) => {
-              let i = d[0].dataIndex;
-              return tooltip[i];
-            },
-          }
-        }
-      }
-    }
-  });
 }
 </script>
 @endsection
