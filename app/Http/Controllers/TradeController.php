@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Material;
-use App\Models\Price_log;
 
 
 class TradeController extends Controller
@@ -22,13 +21,12 @@ class TradeController extends Controller
     session(['selectedID' => $id]);
   }
   public function getGraph($id){
-    $data = Price_log::where('material_id', $id)->get();
-    $name = Price_log::join('materials', 'price_log.material_id', '=', 'materials.id')->where('material_id', $id)->first();
+    $data = Material::find($id);
     $shortDates = [];
     $fullDates = [];
     $prices = [0];
     $colors = [];
-    foreach($data as $row){
+    foreach($data->price_log as $row){
       array_push($shortDates, date_format($row['created_at'], "m/d H:i"));
       array_push($fullDates, date_format($row['created_at'], "Y/m/d H:i:s"));
       array_push($colors, $row['price'] > $prices[count($prices) - 1] ? 'rgba(0, 150, 0, 1)' : 'rgba(255, 0, 0, 1)');
@@ -39,7 +37,7 @@ class TradeController extends Controller
       'shortDates' => $shortDates,
       'fullDates' => $fullDates,
       'prices' => $prices,
-      'materialName' => $name->name,
+      'materialName' => $data->name,
       'colors' => $colors
     ];
   }
