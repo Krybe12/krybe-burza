@@ -9,9 +9,9 @@
   <tbody id="matBody">
   @foreach ($materials as $material)
     <tr data-id="{{$material->id}}" {{ session()->has('selectedID') && session('selectedID') == $material->id ? "class=is-selected" : ''}}>
-      <td>{{$material->name}}</td>
-      <td>{{$material->price}}</td>
-      <td>{{$material->price_change}}</td>
+      <td class="is-unselectable is-clickable">{{$material->name}}</td>
+      <td class="is-unselectable is-clickable">{{$material->price}}</td>
+      <td class="is-unselectable is-clickable">{{$material->price_change}}</td>
     </tr>
   @endforeach
   </tbody>

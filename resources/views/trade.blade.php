@@ -67,8 +67,8 @@ class Graph{
 }
 
 class Table{
-  constructor(){
-    this.tableDiv = document.getElementById('tbl');
+  constructor(div){
+    this.tableDiv = div;
   }
   async get(){
     await getData('assets/tradetable').then(data => this.tableDiv.innerHTML = data);
@@ -84,17 +84,28 @@ class Table{
         let target = e.currentTarget;
         let id = target.dataset.id;
         await table.sendRowClick(id, target);
-        graph.get(id);
       });
     });
   }
   async sendRowClick(id, target){
+    if(this.controller) {
+      this.controller.abort();
+    }
+    this.controller = new AbortController();
+    const signal = this.controller.signal;
+
     let data = new FormData();
     data.append('_token', "{{csrf_token()}}")
     this.selectRow(target);
     await fetch(`assets/tradetable/${id}`, {
       method: 'POST',
-      body: data
+      body: data,
+      signal: signal
+    }).then(data => {
+      graph.get(id);
+    })
+    .catch(err => {
+      console.warn(err);
     });
   }
   selectRow(element){
@@ -106,7 +117,7 @@ class Table{
   }
 }
 let graph = new Graph();
-let table = new Table();
+let table = new Table(document.getElementById('tbl'));
 onReload();
 async function onReload(){
   await table.get();
