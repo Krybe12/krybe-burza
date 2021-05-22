@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index']);
+Route::get('/verification/notice');
 
 Route::get('/trade', [TradeController::class, 'index']);
 

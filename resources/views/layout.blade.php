@@ -41,17 +41,35 @@
     </div>
 
     <div class="navbar-end">
+    @guest
       <div class="navbar-item">
         <div class="buttons">
-          <a class="button is-primary">
+          <a class="button is-primary" href="/register">
             <strong>Sign up</strong>
           </a>
-          <a class="button is-light">
+          <a class="button is-light" href="/login">
             Log in
           </a>
         </div>
       </div>
+    @else
+    <div class="navbar-item">
+      <div class="buttons">
+        <a class="button is-primary" href="/profile">
+          <strong>Profile</strong>
+        </a>
+        <form action="/logout" method="POST">
+          @csrf
+          <input type="submit" value="logout">
+        </form>
+        <a class="button is-light" href="/logout">
+          Log out
+        </a>
+      </div>
     </div>
+    @endguest
+    </div>
+
   </nav>
   @yield('content')
 </body>
