@@ -13,6 +13,12 @@
     </div>
   </div>
 </section>
+
+{{-- <div class="" style="position: absolute; top: 60px; right: 10px; z-index: 5">
+  <iframe src="/assets/tradetable" title="W3Schools Free Online Web Tutorials"></iframe>
+</div> --}}
+
+
 <script>
 class Graph{
   constructor(){
