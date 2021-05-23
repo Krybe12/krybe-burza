@@ -53,20 +53,24 @@
         </div>
       </div>
     @else
-    <div class="navbar-item">
-      <div class="buttons">
-        <a class="button is-primary" href="/profile">
-          <strong>Profile</strong>
-        </a>
-        <form action="/logout" method="POST">
-          @csrf
-          <input type="submit" value="logout">
-        </form>
-        <a class="button is-light" href="/logout">
-          Log out
-        </a>
+      <div class="navbar-item">
+        <h2>Logged in as {{ Auth::user()->name }}</h2>
       </div>
-    </div>
+      <div class="navbar-item">
+        <h2>money: {{ Auth::user()->money }}</h2>
+      </div>
+
+      <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-primary" href="/profile">
+            <strong>Profile</strong>
+          </a>
+          <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <input class="button is-light" type="submit" value="logout">
+          </form>
+        </div>
+      </div>
     @endguest
     </div>
 

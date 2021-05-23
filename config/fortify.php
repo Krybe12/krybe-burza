@@ -46,7 +46,7 @@ return [
     |
     */
 
-    'username' => 'email',
+    'username' => 'name',
 
     'email' => 'email',
 
@@ -104,7 +104,7 @@ return [
 
     'limiters' => [
         'login' => 'login',
-        'two-factor' => 'two-factor',
+        'register' => 'register',
     ],
 
     /*
@@ -133,10 +133,10 @@ return [
 
     'features' => [
         Features::registration(),
-        Features::resetPasswords(),
+        //Features::resetPasswords(),
         // Features::emailVerification(),
-        Features::updateProfileInformation(),
-        Features::updatePasswords(),
+        //Features::updateProfileInformation(),
+        //Features::updatePasswords(),
 /*         Features::twoFactorAuthentication([
             'confirmPassword' => true,
         ]), */

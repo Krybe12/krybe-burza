@@ -132,7 +132,7 @@ async function onReload(){
 }
 function checkIfSelected(){
   let selectedRow = document.getElementsByClassName('is-selected');
-  if (!selectedRow) return;
+  if (!selectedRow.length) return;
   graph.get([...selectedRow][0].dataset.id);
 }
 async function getData(path){
