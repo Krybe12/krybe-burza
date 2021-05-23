@@ -54,7 +54,7 @@
       </div>
     @else
       <div class="navbar-item">
-        <h2>Logged in as {{ Auth::user()->name }}</h2>
+        <h2>Logged in as <b>{{ Auth::user()->name }}</b></h2>
       </div>
       <div class="navbar-item">
         <h2>money: {{ Auth::user()->money }}</h2>

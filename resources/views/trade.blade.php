@@ -128,7 +128,7 @@ onReload();
 async function onReload(){
   await table.get();
   checkIfSelected();
-  setInterval(table.get.bind(table), 30000);
+  setInterval(table.get.bind(table), 60000);
 }
 function checkIfSelected(){
   let selectedRow = document.getElementsByClassName('is-selected');
