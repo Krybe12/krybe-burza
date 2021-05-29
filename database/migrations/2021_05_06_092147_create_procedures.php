@@ -12,7 +12,8 @@ class CreateProcedures extends Migration
      */
     public function up()
     {
-        DB::unprepared('
+      //adasdasd
+/*         DB::unprepared('
         CREATE OR REPLACE PROCEDURE p_change_prices()
             BEGIN
                 DECLARE curFinished INTEGER DEFAULT 0;
@@ -44,7 +45,7 @@ class CreateProcedures extends Migration
                 END LOOP curLoop;
                 CLOSE curPrice;
             END
-        ');
+        '); */
         
     }
 
@@ -55,6 +56,6 @@ class CreateProcedures extends Migration
      */
     public function down()
     {
-        DB::unprepared('DROP PROCEDURE `p_change_prices`');
+        /* DB::unprepared('DROP PROCEDURE `p_change_prices`'); */
     }
 }

@@ -14,14 +14,15 @@ class CreateChangePriceEvent extends Migration
      */
     public function up()
     {
-      DB::unprepared('
+      //adasdasd
+/*       DB::unprepared('
       CREATE EVENT e_change_prices
         ON SCHEDULE EVERY 1 HOUR
         DO 
         BEGIN
           CALL p_change_prices();
         END
-      ');
+      '); */
     }
 
     /**
@@ -31,6 +32,6 @@ class CreateChangePriceEvent extends Migration
      */
     public function down()
     {
-      DB::unprepared('DROP EVENT `e_change_prices`');
+      /* DB::unprepared('DROP EVENT `e_change_prices`'); */
     }
 }
