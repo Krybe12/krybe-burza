@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Material;
-
+use App\Models\Storage;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class TradeController extends Controller
 {
@@ -40,5 +42,57 @@ class TradeController extends Controller
       'materialName' => $data->name,
       'colors' => $colors
     ];
+  }
+  public function tradeButtons($id){
+    if(!Auth::user()) return "Log in to begin trading";
+    $storage = Auth::user()->storage->where('material_id', $id)->first();
+    return view('assets.trade_buysell', [
+      'storage' => $storage,
+      'id' => $id
+    ]);
+  }
+  public function sell($id){
+    $status = "succesfully sold!";
+    $amount = $_POST['amount'];
+    $user = User::find(Auth::user()->id);
+    $material = Auth::user()->storage->where('material_id', $id)->first();
+    if(!$material){
+      $status = "you dont own this material!";
+    } else if ($amount > $material->amount){
+      $status = "you own that many of selected material";
+    } else {
+      $material->amount = $material->amount - $amount;
+      if ($material->amount <= 0){
+        $material->delete();
+      } else {
+        $material->save();
+      }
+      $user->money += $material->material->price * $amount;
+      $user->save();
+    }
+    return redirect('/trade')->with('status', $status);;
+  }
+  public function buy($id){
+    $status = "succesfully bought!";
+    $amount = $_POST['amount'];
+    $user = User::find(Auth::user()->id);
+    $storage = Auth::user()->storage->where('material_id', $id)->first();
+    $materialPrice = Material::find($id)->price;
+    if ($user->money < $amount * $materialPrice){ 
+      $status = "you dont have enough money";
+    } else {
+      $user->money -= $amount * $materialPrice;
+      $user->save();
+      if (!$storage){
+        $storage = New Storage;
+        $storage->user_id = $user->id;
+        $storage->material_id = $id;
+        $storage->amount = 0;
+        $storage->save();
+      }
+      $storage->amount = $storage->amount + $amount;
+      $storage->save();
+    }
+    return redirect('/trade')->with('status', $status);
   }
 }

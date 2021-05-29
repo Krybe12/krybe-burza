@@ -29,4 +29,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
     ];
+    
+    public function storage(){
+      return $this->hasMany(Storage::class);
+    }
 }

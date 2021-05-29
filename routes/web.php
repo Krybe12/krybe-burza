@@ -21,7 +21,11 @@ Route::get('/verification/notice');
 
 Route::get('/trade', [TradeController::class, 'index']);
 
+Route::post('/trade/buy/{id}', [TradeController::class, 'buy']);
+Route::post('/trade/sell/{id}', [TradeController::class, 'sell']);
+
 Route::get('/assets/tradetable', [TradeController::class, 'tradeTable']);
+Route::get('/assets/tradebuttons/{id}', [TradeController::class, 'tradeButtons']);
 Route::post('/assets/tradetable/{id}', [TradeController::class, 'selectMaterial']);
 Route::get('/assets/graph/{id}', [TradeController::class, 'getGraph']);
 

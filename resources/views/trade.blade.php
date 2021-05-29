@@ -3,6 +3,16 @@
 
 @section('content')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div id="test" class="pt-5 is-flex is-justify-content-center">
+</div>
+<div class="is-flex is-justify-content-center">
+  @if (session('status'))
+  <div class="notification is-primary mt-3">
+    <button class="delete"></button>
+    {{ session('status') }}
+  </div>
+  @endif
+</div>
 <section class="section">
   <div class="columns is-variable" style="max-height: 84vh;">
     <div class="column is-three-fifths has-background-grey-light">
@@ -14,11 +24,6 @@
   </div>
 </section>
 
-{{-- <div class="" style="position: absolute; top: 60px; right: 10px; z-index: 5">
-  <iframe src="/assets/tradetable" title="W3Schools Free Online Web Tutorials"></iframe>
-</div> --}}
-
-
 <script>
 class Graph{
   constructor(){
@@ -27,6 +32,7 @@ class Graph{
   }
 
   get(id){
+    getButtons(id);
     getData(`assets/graph/${id}`).then(data => {
       this.data = JSON.parse(data);
       this.create();
@@ -128,7 +134,7 @@ onReload();
 async function onReload(){
   await table.get();
   checkIfSelected();
-  setInterval(table.get.bind(table), 60000);
+  setInterval(table.get.bind(table), 100000);
 }
 function checkIfSelected(){
   let selectedRow = document.getElementsByClassName('is-selected');
@@ -139,6 +145,11 @@ async function getData(path){
   const response = await fetch(path);
   const data = await response.text();
   return data;
+}
+function getButtons(id){
+  getData(`assets/tradebuttons/${id}`).then(data => {
+      document.getElementById('test').innerHTML = data;
+    });
 }
 </script>
 @endsection
